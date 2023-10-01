@@ -1,9 +1,9 @@
 import serial.tools.list_ports
 from PIL import Image
 from customtkinter import *
-from streamdeak import Streamdeak
+from ArDeck import ArDesks
 
-image_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "asset")
+image_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "../asset")
 
 one_image = CTkImage(light_image=Image.open(os.path.join(image_path, "1_dark.png")),
                                              dark_image=Image.open(os.path.join(image_path, "1_white.png")),
@@ -43,7 +43,7 @@ final_b2 = str
 
 window = CTk()
 window.geometry("920x500")
-window.title("streamdesk")
+window.title("ArDecks")
 
 def choose_port(choice):
     global final_port
@@ -111,4 +111,4 @@ done_button.pack(side=BOTTOM, pady=12)
 
 window.mainloop()
 
-Streamdeak(port_selected=final_port, app=window, action_b1=final_b1, action_b2=final_b2)
+ArDesks(port_selected=final_port, app=window, action_b1=final_b1, action_b2=final_b2)
