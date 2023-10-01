@@ -6,7 +6,7 @@ from pynput.keyboard import Key, Controller
 
 
 
-class Streamdeak:
+class ArDesks:
     def __init__(self, port_selected, app, action_b1, action_b2):
         app.quit()
 
@@ -27,13 +27,15 @@ class Streamdeak:
                 except ValueError:"""
                 # Lisez les données du port série
 
-                if data.strip() == "b1":
+                if data.strip() == "S1":
                     if action_b1 == "ouvrir une application":
                         self.open_app(NB=1)
                     elif action_b1 == "capture d'ecran":
                         self.screen_capture()
+                    elif action_b1 == "écrire une phrase":
+                        self.type_caratere(NB=1)
 
-                if data.strip() == "b2":
+                if data.strip() == "S2":
                     if action_b2 == "ouvrir une application":
                         self.open_app(NB=2)
                     elif action_b1 == "capture d'ecran":
@@ -50,10 +52,10 @@ class Streamdeak:
 
     def open_app(self, NB):
         if NB == 1:
-            commandeB1 = 'start "C:/ProgramData/Microsoft/Windows/Start Menu/Programs/OneNote.lnk"'
+            commandeB1 = 'open /Applications/Discord.app'
             subprocess.run(commandeB1, shell=True, universal_newlines=True)
         elif NB == 2:
-            commandeB2: str = 'start "C:/Users/lucas/AppData\Roaming/Microsoft/Windows/Start Menu/Programs\System Tools/Command Prompt.lnk"'
+            commandeB2: str = 'open /System/Applications/Utilities/Terminal.app'
             subprocess.run(commandeB2, shell=True, universal_newlines=True)
 
     def type_caratere(self, NB):
@@ -63,9 +65,5 @@ class Streamdeak:
             self.keyboard.type("≥")
 
     def screen_capture(self):
-        self.keyboard.press(Key.cmd)
-        self.keyboard.press(Key.shift)
-        self.keyboard.press('s')
-        self.keyboard.release('s')
-        self.keyboard.release(Key.shift)
-        self.keyboard.release(Key.cmd)
+        commandescreen = 'open /System/Applications/Utilities/Screenshot.app'
+        subprocess.run(commandescreen, shell=True, universal_newlines=True)
