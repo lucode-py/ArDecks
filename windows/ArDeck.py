@@ -7,8 +7,8 @@ from pynput.keyboard import Key, Controller
 
 
 class ArDesks:
-    def __init__(self, port_selected, app, action_b1, action_b2):
-        app.quit()
+    def __init__(self, port_selected, action_b1, action_b2):
+
 
         ser = serial.Serial(port_selected, baudrate=9600, timeout=1)
 
