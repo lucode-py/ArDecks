@@ -5,13 +5,10 @@ from pynput.keyboard import Key, Controller
 
 
 
-
 class ArDesks:
-    def __init__(self, port_selected, app, action_b1, action_b2):
-        app.quit()
-
+    def __init__(self, port_selected, action_b1, action_b2, app_path):
         ser = serial.Serial(port_selected, baudrate=9600, timeout=1)
-
+        self.app_path = app_path
         self.keyboard = Controller()
 
         while True:
@@ -29,7 +26,7 @@ class ArDesks:
 
                 if data.strip() == "S1":
                     if action_b1 == "ouvrir une application":
-                        self.open_app(NB=1)
+                        self.open_app(NB=1, app_path=self.app_path[0])
                     elif action_b1 == "capture d'ecran":
                         self.screen_capture()
                     elif action_b1 == "écrire une phrase":
@@ -37,8 +34,8 @@ class ArDesks:
 
                 if data.strip() == "S2":
                     if action_b2 == "ouvrir une application":
-                        self.open_app(NB=2)
-                    elif action_b1 == "capture d'ecran":
+                        self.open_app(NB=2, app_path=app_path[1])
+                    elif action_b2 == "capture d'ecran":
                         self.screen_capture()
                     elif action_b2 == "écrire une phrase":
                         self.type_caratere(NB=2)
@@ -50,12 +47,13 @@ class ArDesks:
         # Fermez le port série à la fin
         ser.close()
 
-    def open_app(self, NB):
+    def open_app(self, NB, app_path):
         if NB == 1:
-            commandeB1 = 'open /Applications/Discord.app'
+            commandeB1 = 'open ' + app_path
+            print(commandeB1)
             subprocess.run(commandeB1, shell=True, universal_newlines=True)
         elif NB == 2:
-            commandeB2: str = 'open /System/Applications/Utilities/Terminal.app'
+            commandeB2: str = 'open ' + app_path
             subprocess.run(commandeB2, shell=True, universal_newlines=True)
 
     def type_caratere(self, NB):
