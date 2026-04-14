@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>ArDesks Configuration</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #1d1d1d;
+            text-align: center;
+        }
+        .container {
+            display: flex;
+            gap: 30px;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 20px;
+        }
+        .input-section {
+            flex: 0 0 auto;
+            text-align: left;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+        .cell {
+            background: #303030;
+            color: white;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 0 5px #aaa;
+            width: 150px;
+            height: 150px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        .cell.selected {
+            background: linear-gradient(200deg, #E26607 0%, #F04444 23.3%, #79278A 66.6%);
+            box-shadow: 0 0 15px rgba(224, 68, 68, 0.8);
+        }
+        select, input {
+            width: 95%;
+            padding: 6px;
+            margin-top: 8px;
+        }
+        #done {
+            display: block;
+            margin: 30px auto;
+            padding: 12px 25px;
+            background: linear-gradient(200deg, #E26607 0%, #F04444 23.3%, #79278A 66.6%);
+            color: white;
+            font-size: 18px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        #done:hover {
+            background: linear-gradient(200deg, #E26607 0%, #F04444 23.3%, #79278A 66.6%);
+        }
+        select {
+            width: 95%;
+            padding: 6px;
+            margin-top: 8px;
+            background-color: #282828; /* Fond sombre */
+            color: #ffffff; /* Couleur du texte */
+            border: 1px solid #414141; /* Bordure blanche pour le contraste */
+            border-radius: 5px;
+            appearance: none; /* Enlever l'apparence par défaut */
+            outline: none; /* Enlever le contour par défaut lors de la sélection */
+            font-size: 16px;
+            /* Optionnel: ajouter un effet de transition */
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+            bottom: 0;
+        }
+
+        select:focus {
+            border-color: #79278A; /* Couleur de bordure au focus */
+        }
+
+        /* Styles pour les options du menu déroulant */
+        .form-select option {
+            color: #000000; /* Couleur du texte dans le menu déroulant */
+            background-color: #1b1b1b; /* Fond des options pour meilleure lisibilité */
+        }
+
+
+
+    </style>
+</head>
+<body>
+
+<h1>Configuration des 9 boutons ArDesks</h1>
+
+<div class="container">
+    {% for i in range(9) %}
+
+        <select onchange="showSubOption({{ i }})" id="action{{ i }}"  class="form-control" style="display: none;">
+            {% for opt in options %}
+            <option value="{{ opt }}">{{ opt }}</option>
+            {% endfor %}
+        </select>
+        <div class="input-section">
+            <input type="text" id="sub{{ i }}" placeholder="" style="display:none;background-color: #303030;" class="">
+        </div>
+        {% endfor %}
+    
+    <div class="grid">
+        {% for i in range(9) %}
+
+        <div class="cell">
+            <h3>Bouton {{ i+1 }}</h3>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<button id="done" onclick="sendData()">DONE</button>
+
+<script>
+function showSubOption(i) {
+    let action = document.getElementById("action" + i).value;
+    let sub = document.getElementById("sub" + i);
+
+    if (action === "écrire une phrase") {
+        sub.placeholder = "Écrivez la phrase…";
+        sub.style.display = "block";
+    } 
+    else if (action === "executer une command") {
+        sub.placeholder = "Commande à exécuter…";
+        sub.style.display = "block";
+    }
+    else if (action === "ouvrir une application") {
+        sub.placeholder = "Chemin de l'application…";
+        sub.style.display = "block";
+    }
+    else {
+        sub.style.display = "none";
+    }
+}
+
+// Sélection des cellules
+document.addEventListener("DOMContentLoaded", function() {
+    const cells = document.querySelectorAll(".cell");
+    
+    cells.forEach((cell, index) => {
+        cell.addEventListener("click", function() {
+            // Retirer la classe selected de toutes les cellules
+            cells.forEach((c, i) => {
+                c.classList.remove("selected");
+                // Masquer tous les inputs
+                document.getElementById("action" + i).style.display = "none";
+                document.getElementById("sub" + i).style.display = "none";
+            });
+            
+            // Ajouter la classe selected à la cellule cliquée
+            this.classList.add("selected");
+            
+            // Afficher l'input correspondant
+            document.getElementById("action" + index).style.display = "block";
+            showSubOption(index); // Mettre à jour l'affichage du sous-input en fonction de l'action sélectionnée
+        });
+    });
+});
+
+function sendData() {
+    let data = {};
+
+    for (let i = 0; i < 9; i++) {
+        let action = document.getElementById("action" + i).value;
+        let sub = document.getElementById("sub" + i).value;
+
+        if (action === "écrire une phrase" || action === "executer une command" || action === "ouvrir une application") {
+            data[i] = { action: action, value: sub };
+        } else {
+            data[i] = { action: action };
+        }
+    }
+
+    fetch("/save", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+    })
+    .then(res => res.json())
+    //.then(res => alert("Configuration envoyée !\n" + JSON.stringify(res.received, null, 2)))
+    .catch(err => alert("Erreur : " + err));
+    }
+    </script>
+
+</body>
+</html>
