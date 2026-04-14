@@ -2,13 +2,13 @@
 
 Un projet permettant de créer des boutons configurables via Arduino et une interface web, avec un programme Python qui gère l'interaction entre le matériel et les actions système.
 
-## 📋 Prérequis
+## Prérequis
 
 - **Python 3.10+** (minimum 3.7, mais 3.10 ou 3.11 recommandés)
 - **Arduino** (sketch fourni dans le projet)
 - **pip** (gestionnaire de paquets Python)
 
-## 🚀 Installation
+## Installation
 
 ### 1. Créer un environnement virtuel
 ```bash
@@ -23,7 +23,7 @@ ArDesk_venv\Scripts\activate  # Windows
 pip install -r requirements.txt
 ```
 
-## 📁 Structure du projet
+## Structure du projet
 
 ```
 new_universal_gui/
@@ -34,7 +34,7 @@ new_universal_gui/
 └── templates/          # Fichiers HTML, CSS, JS
 ```
 
-## ⚙️ Configuration
+## Configuration
 
 ### Configuration Arduino
 1. Téléverser le sketch depuis `ArDesks/ArDesks_sketch/ArDesks_sketch.ino`
@@ -48,7 +48,12 @@ Les actions configurables incluent :
 - Exécuter une commande
 - Écrire du texte
 
-## 🏃 Utilisation
+## Utilisation
+
+Lancer le serveur flask:
+```bash
+python new_universal_gui/flask_test.py
+```
 
 Lancer l'application :
 ```bash
@@ -57,7 +62,7 @@ python new_universal_gui/main.py
 
 L'interface web sera accessible à `http://127.0.0.1:5000`
 
-## 📦 Dépendances principales
+## Dépendances principales
 
 - **Flask** - Framework web
 - **pyserial** - Communication Arduino
