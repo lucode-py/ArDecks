@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>ArDesks Configuration</title>
+    <link rel="icon" type="image/svg+xml" href="static/logo_ArDesks.svg">
+
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -59,24 +61,41 @@
         #done:hover {
             background: linear-gradient(200deg, #E26607 0%, #F04444 23.3%, #79278A 66.6%);
         }
+        /* Positionnement des select et input en bas à gauche */
         select {
-            width: 95%;
-            padding: 6px;
+            position: fixed;
+            bottom: 150px;
+            left: 30px;
+            width: 250px;
+            padding: 8px;
             margin-top: 8px;
-            background-color: #282828; /* Fond sombre */
-            color: #ffffff; /* Couleur du texte */
-            border: 1px solid #414141; /* Bordure blanche pour le contraste */
+            background-color: #282828;
+            color: #ffffff;
+            border: 1px solid #414141;
             border-radius: 5px;
-            appearance: none; /* Enlever l'apparence par défaut */
-            outline: none; /* Enlever le contour par défaut lors de la sélection */
-            font-size: 16px;
-            /* Optionnel: ajouter un effet de transition */
+            appearance: none;
+            outline: none;
+            font-size: 14px;
             transition: background-color 0.3s ease, border-color 0.3s ease;
-            bottom: 0;
+            z-index: 1000;
+        }
+
+        .input-section input {
+            position: fixed;
+            bottom: 150px;
+            left: 300px;
+            width: 250px !important;
+            padding: 8px;
+            background-color: #303030 !important;
+            color: #ffffff;
+            border: 1px solid #414141;
+            border-radius: 5px;
+            font-size: 14px;
+            z-index: 1000;
         }
 
         select:focus {
-            border-color: #79278A; /* Couleur de bordure au focus */
+            border-color: #79278A;
         }
 
         /* Styles pour les options du menu déroulant */
