@@ -1,7 +1,6 @@
 import webview
-from api import API
 
-api = API()
+
 
 window = webview.create_window(
     "ArDesk Configurator",

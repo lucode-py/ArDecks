@@ -52,7 +52,7 @@ Les actions configurables incluent :
 
 Lancer le serveur flask:
 ```bash
-python new_universal_gui/flask_test.py
+python new_universal_gui/flask_backend.py
 ```
 
 Lancer l'application :

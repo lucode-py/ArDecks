@@ -62,7 +62,7 @@
             background: linear-gradient(200deg, #E26607 0%, #F04444 23.3%, #79278A 66.6%);
         }
         /* Positionnement des select et input en bas à gauche */
-        select {
+        .form-control {
             position: fixed;
             bottom: 150px;
             left: 30px;
@@ -94,7 +94,7 @@
             z-index: 1000;
         }
 
-        select:focus {
+        .form-control:focus {
             border-color: #79278A;
         }
 
@@ -104,8 +104,23 @@
             background-color: #1b1b1b; /* Fond des options pour meilleure lisibilité */
         }
 
-
-
+        .error_serial {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            width: 250px;
+            padding: 12px 25px;
+            margin-top: 8px;
+            background-color: #282828;
+            color: #ffffff;
+            border: 1px solid #414141;
+            border-radius: 5px;
+            appearance: none;
+            outline: none;
+            font-size: 18px;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+            z-index: 1000;
+        }
     </style>
 </head>
 <body>
@@ -136,6 +151,13 @@
 </div>
 
 <button id="done" onclick="sendData()">DONE</button>
+<select id="select_port" class="error_serial">
+    <option value="selectionner">séléctionner</option>
+    {% for prt in ports %}
+    <option value="{{ prt }}">{{ prt }}</option>
+    {% endfor %}
+</select>
+<p id="selectionner" style="display: none; color:red;">Pour pouvoir lancer ArDesk veiller selectionner le port serie sur le quelle il est lancer</p>
 
 <script>
 function showSubOption(i) {
@@ -184,17 +206,25 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 function sendData() {
-    let data = {};
-
+    let data = {
+        actions: {},
+        port: document.getElementById("select_port").value
+    };
+    if (document.getElementById("select_port").value == "selectionner"){
+        console.log("erreur");
+        let error_message = document.getElementById("selectionner");
+        error_message.style.display = "block";
+        return 0;
+    }
     for (let i = 0; i < 9; i++) {
         let action = document.getElementById("action" + i).value;
         let sub = document.getElementById("sub" + i).value;
-
         if (action === "écrire une phrase" || action === "executer une command" || action === "ouvrir une application") {
-            data[i] = { action: action, value: sub };
+            data.actions[i] = { action: action, value: sub };
         } else {
-            data[i] = { action: action };
+            data.actions[i] = { action: action };
         }
+        console.log(i);
     }
 
     fetch("/save", {
