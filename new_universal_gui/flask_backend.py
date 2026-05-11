@@ -1,8 +1,12 @@
 from flask import Flask, render_template, request, jsonify
+from mypy.dmypy.client import action
 from ArDecks import ArDesks
 import threading
+import serial.tools.list_ports
+
 
 app = Flask(__name__)
+PORTS = serial.tools.list_ports.comports()
 
 OPTIONS = [
     "selectionez",
@@ -19,7 +23,7 @@ ar_desks_instance = None
 
 @app.route("/")
 def index():
-    return render_template("index.html", options=OPTIONS)
+    return render_template("index.html", options=OPTIONS, ports=PORTS)
 
 @app.route("/save", methods=["POST"])
 def save():
@@ -33,7 +37,11 @@ def save():
     #   ...
     # }
 
-    print("Données reçues :", data)
+
+    actions = data.get('actions')
+    port_brut = data.get('port')
+
+    port = port_brut.split(' ')[0] if port_brut else None
 
     # Arrêter l'instance précédente si elle existe
     if ar_desks_instance:
@@ -41,8 +49,8 @@ def save():
     
     # Créer une nouvelle instance et la lancer dans un thread
     ar_desks_instance = ArDesks(
-        port_selected="/dev/ttyUSB0",
-        action=data  # Passer directement le JSON avec le mapping
+        port_selected=port,
+        action=actions  # Passer directement le JSON avec le mapping
     )
     
     # Lancer ArDesks dans un thread pour ne pas bloquer Flask
