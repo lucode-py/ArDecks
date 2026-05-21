@@ -30,8 +30,6 @@ class ArDesks:
             "augementer le son": self.increase_volume,
             "baisser le son": self.decrease_volume,
         }
-        
-        self.start_listening()
 
     def start_listening(self):
         """Écoute le port série et déclenche les actions"""
