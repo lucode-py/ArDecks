@@ -1,0 +1,13 @@
+"@executable_path/lib/gdk-pixbuf/loaders/libpixbufloader-xpm.so"
+"xpm" 4 "gdk-pixbuf" "XPM" "LGPL"
+"image/x-xpixmap" ""
+"xpm" ""
+"/* XPM */" "" 100
+
+"@executable_path/lib/gdk-pixbuf/loaders/io-wmf.so"
+"wmf" 0 "gdk-pixbuf" "Windows Metafile" ""
+"image/x-wmf" ""
+"wmf" "apm" ""
+"\327\315\306\232" "" 100
+"\001" "" 100
+

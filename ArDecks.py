@@ -21,6 +21,19 @@ class ArDesks:
         self.keyboard = None  # Initialisé tardivement
         self.running = True
         
+        # Mapping Arduino (S1, S2, etc.) vers les indices (0, 1, etc.)
+        self.arduino_to_index = {
+            "S1": "0",
+            "S2": "1",
+            "S3": "2",
+            "S4": "3",
+            "S5": "4",
+            "S6": "5",
+            "S7": "6",
+            "S8": "7",
+            "S9": "8",
+        }
+        
         # Mapping des actions texte aux méthodes
         self.action_handlers = {
             "ouvrir une application": self.open_app,
@@ -50,8 +63,15 @@ class ArDesks:
         while self.running:
             try:
                 data = ser.readline().decode('utf-8').strip()
-                if data in self.action_map:
-                    action_info = self.action_map[data]
+                
+                # Convertir le code Arduino (S1, S2, etc.) en index (0, 1, etc.)
+                action_key = self.arduino_to_index.get(data, data)
+                
+                print(f"DEBUG: Données reçues: '{data}' -> Index: '{action_key}'")
+                print(f"DEBUG: Clés disponibles: {list(self.action_map.keys())}")
+                
+                if action_key in self.action_map:
+                    action_info = self.action_map[action_key]
                     action_type = action_info.get("action")
                     value = action_info.get("value")
                     
@@ -64,7 +84,7 @@ class ArDesks:
                     else:
                         print(f"Action non reconnue: {action_type}")
                 else:
-                    print(f"Clé non reconnue: {data}")
+                    print(f"Clé non reconnue: '{data}' (convertie en '{action_key}')")
             except KeyboardInterrupt:
                 print("Arrêt de la lecture.")
                 break
@@ -96,7 +116,27 @@ class ArDesks:
                 subprocess.run('open /System/Applications/Utilities/Screenshot.app', 
                              shell=True, universal_newliukgugugnes=True)
             elif sys.platform == "linux":  # Linux
-                subprocess.run('gnome-screenshot', shell=True, universal_newlines=True)
+                # On découpe proprement chaque argument de la commande
+                command = [
+                    "gdbus", "call",
+                    "--session",
+                    "--dest", "org.freedesktop.portal.Desktop",
+                    "--object-path", "/org/freedesktop/portal/desktop",
+                    "--method", "org.freedesktop.portal.Screenshot.Screenshot",
+                    "",  # L'argument vide (parent_window)
+                    '{"interactive": <true>}'  # Les options au format GVariant
+                ]
+
+                try:
+                    # On exécute la commande et on attend qu'elle se termine
+                    result = subprocess.run(command, capture_output=True, text=True, check=True)
+                    
+                    # Si tu veux voir la réponse du système (l'URI de l'image si enregistrée)
+                    print("Succès !", result.stdout)
+
+                except subprocess.CalledProcessError as e:
+                    print(f"Erreur lors de l'exécution : {e}")
+                    print(f"Détail de l'erreur : {e.stderr}")
             elif sys.platform == "win32":  # Windows
                 subprocess.run('screencapture -c', shell=True, universal_newlines=True)
         except Exception as e:

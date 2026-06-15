@@ -79,7 +79,7 @@ def show_window(icon, item):
         # pywebview a besoin d'être démarré une première fois via start()
         if not webview_started:
             webview_started = True
-            webview.start(debug=True, user_agent="ArDeskAgent")
+            webview.start(debug=False, user_agent="ArDeskAgent")
     else:
         # Si la fenêtre existe déjà (cas des OS qui supportent show/hide)
         window.show()
@@ -104,7 +104,7 @@ def quit_application(icon, item):
 def setup_tray():
     """Configure et lance l'icône dans la barre des tâches"""
     # Tu pourras remplacer 'create_dummy_icon()' par Image.open("ton_logo.png")
-    svg_filename = "logo.svg"
+    svg_filename = "static/logo.svg"
     icon_image = load_svg_icon(svg_filename)
 
     # Création du menu au clic droit sur l'icône
